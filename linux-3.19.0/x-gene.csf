@@ -1,0 +1,77 @@
+// CVD Mon Mar 07 14:09:27 2016
+
+ B::
+ WINCLOSEALL
+;CVD64  Tuesday, March 15, 2016  19:21:48
+;OPTION SET START
+DISCONNECT
+;Interface Option
+
+;SYSTEM Setting
+CPUTYPE CORTEXA57
+OPTION.JTAGCLOCK 10.000000Mhz
+OPTION.EnReset OFF
+OPTION.TRST OFF
+OPTION.ResBreak OFF
+OPTION.WaitReset OFF
+OPTION.CR OFF
+OPTION.RegisterInit OFF
+OPTION.PCZero OFF
+OPTION.RTCK OFF
+OPTION.DACR OFF
+OPTION.BigEndian OFF
+OPTION.SerialWire OFF
+OPTION.Update ON
+OPTION.DevName evb_ks17c4000
+OPTION.DisMode AUTO
+OPTION.SpeedUp OFF
+OPTION.InterruptRESet
+OPTION.InterruptDisable ASMSTEP
+OPTION.InterruptDisable CSTEP
+
+;JTAG Setting
+MULtiCore.IRPOST 0.
+MULtiCore.DRPost 0.
+MULtiCore.IRPRE 0.
+MULtiCore.DRPre 0.
+MULtiCore.DAPIRPOST 0.
+MULtiCore.DAPDRPOST 0.
+MULtiCore.DAPIRPRE 0.
+MULtiCore.DAPDRPRE 0.
+MULtiCore.ETBIRPOST 0.
+MULtiCore.ETBDRPOST 0.
+MULtiCore.ETBIRPRE 0.
+MULtiCore.ETBDRPRE 0.
+
+;CORESIGHT Setting
+MULtiCore.DEBUGACCESSPORT 1.
+MULtiCore.COUNT 8.
+MULtiCore.COREBASE 0xFC010000 0xFC110000 0xFC210000 0xFC310000 0xFC410000 0xFC510000 0xFC610000 0xFC710000 
+MULtiCore.CTIBASE  0xFC020000 0xFC120000 0xFC220000 0xFC320000 0xFC420000 0xFC520000 0xFC620000 0xFC720000 
+ 
+wait 100.ms
+
+CONNECT
+ 
+ ; load vmlinux symbol into physical address location
+ ;; uncomment when debug from a PA for assemble code
+ LoadImage vmlinux 0x4000200000-0xFFFFFE0000000000  %symbol 
+ ; LoadImage vmlinux 0x4200200000-0xFFFFFE0000000000  %symbol 
+end ;
+
+ ;; load vmlinux symbol into virtual address location. 
+ ; uncomment when load normal image
+LoadIMAGE vmlinux* %SYMBOL  
+ 
+ break.set start_kernel /o 
+ 
+ ; break.set secondary_start_kernel /o 
+ break.set secondary_start_kernel /o  
+
+ ; set breakpoint at kvm_vmiotcl , only stop when iotcl value is 0xAE41 
+ ; break.set  kvm_vm_ioctl  /o  /cond ioctl==0xAE41    
+ winpos 0 0 50% 100%  
+ 
+ DEBUGLIST
+ 
+ ENDDO

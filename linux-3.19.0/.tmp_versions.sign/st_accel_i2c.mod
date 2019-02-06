@@ -1,0 +1,2 @@
+drivers/iio/accel/st_accel_i2c.ko
+drivers/iio/accel/st_accel_i2c.o
